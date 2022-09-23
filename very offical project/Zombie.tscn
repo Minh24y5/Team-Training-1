@@ -1,0 +1,107 @@
+[gd_scene load_steps=17 format=2]
+
+[ext_resource path="res://assets/zombie_1.png" type="Texture" id=1]
+[ext_resource path="res://Hitbox and hurtbox/Hurtbox.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Zombie.gd" type="Script" id=3]
+[ext_resource path="res://Stats.tscn" type="PackedScene" id=4]
+[ext_resource path="res://playerDetectionZone.gd" type="Script" id=5]
+[ext_resource path="res://Hitbox and hurtbox/Hitbox.tscn" type="PackedScene" id=6]
+[ext_resource path="res://kevlar2.wav" type="AudioStream" id=7]
+
+[sub_resource type="AtlasTexture" id=1]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 0, 0, 24, 21 )
+
+[sub_resource type="AtlasTexture" id=2]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 24, 0, 24, 21 )
+
+[sub_resource type="AtlasTexture" id=3]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 48, 0, 24, 21 )
+
+[sub_resource type="AtlasTexture" id=4]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 72, 0, 24, 21 )
+
+[sub_resource type="SpriteFrames" id=5]
+animations = [ {
+"frames": [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 6.75, 9.625 )
+
+[sub_resource type="RectangleShape2D" id=7]
+
+[sub_resource type="CircleShape2D" id=8]
+radius = 437.193
+
+[sub_resource type="RectangleShape2D" id=9]
+
+[node name="Zombie" type="KinematicBody2D"]
+position = Vector2( 2, 0 )
+z_index = 2
+collision_layer = 3
+collision_mask = 3
+script = ExtResource( 3 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+scale = Vector2( 1.09203, 1.2381 )
+frames = SubResource( 5 )
+frame = 3
+playing = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -1, 0 )
+shape = SubResource( 6 )
+
+[node name="Hurtbox" parent="." instance=ExtResource( 2 )]
+scale = Vector2( 1.5, 1.5 )
+collision_layer = 8
+collision_mask = 2
+
+[node name="CollisionShape2D" parent="Hurtbox" index="0"]
+shape = SubResource( 7 )
+
+[node name="Stats" parent="." instance=ExtResource( 4 )]
+
+[node name="playerDetectionZone" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource( 5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="playerDetectionZone"]
+shape = SubResource( 8 )
+
+[node name="Hitbox" parent="." instance=ExtResource( 6 )]
+scale = Vector2( 1.5, 1.5 )
+collision_mask = 4
+
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+shape = SubResource( 9 )
+
+[node name="HitSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 7 )
+volume_db = -2.0
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_Hurtbox_area_entered"]
+[connection signal="body_entered" from="Hurtbox" to="." method="_on_Hurtbox_body_entered"]
+[connection signal="no_health" from="Stats" to="." method="_on_Stats_no_health"]
+[connection signal="body_entered" from="playerDetectionZone" to="playerDetectionZone" method="_on_playerDetectionZone_body_entered"]
+[connection signal="body_exited" from="playerDetectionZone" to="playerDetectionZone" method="_on_playerDetectionZone_body_exited"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+
+[editable path="Hurtbox"]
+[editable path="Hitbox"]

@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/KILL.mp3-69b374f08656b4a664c0743ff12d7750.mp3str"
+
+[deps]
+
+source_file="res://audio/KILL.mp3"
+dest_files=[ "res://.import/KILL.mp3-69b374f08656b4a664c0743ff12d7750.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0
